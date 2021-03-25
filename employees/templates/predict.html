@@ -1,0 +1,82 @@
+{% extends "index.html" %}
+
+{% block main %}
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Prediction Results</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <h5>Prediction Input:</h5>
+                    <div>Work experience: <span id="we"></span> days</div>
+                    <div>Department: <span id="di"></span></div>
+                    <h5 class="pt-3">Prediction</h5>
+                    <div id="prediction"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <a class="btn btn-primary" href="/results" role="button">View DB</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container pt-5">
+        <div class="row justify-content-md-center">
+            <div class="col-md-4">
+                <h4>Salary Prediction</h4>
+                <h5>Based on this
+                    <a href="https://data.world/baltimore/6xv6-e66h/workspace/file?filename=baltimore-city-employee-salaries-fy2019-1.csv" target="_blank">dataset</a>
+                </h5>
+                <br>
+                <form action="" id="post-form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="name"><b>Name</b></label>
+                        <input type="text" maxlength="255" class="form-control" id="name" placeholder="" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_department"><b>Department</b></label>
+                        <select class="custom-select" name="id_department" id="id_department">
+                            <option value="">--------------</option>
+                            {% for department in departments %}
+                                <option value="{{ department.id }}">{{ department.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="id_jobtitle"><b>Job Title</b></label>
+                        <select class="custom-select" name="id_jobtitle" id="id_jobtitle"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="annual_rt"><b>Annual rating</b></label>
+                        <input type="number" class="form-control" id="annual_rt" placeholder="" required>
+                    </div>
+                    <label for="hire_date"><b>Hire date</b></label>
+                    <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                        <input type="text" class="form-control datetimepicker-input" id="hire_date"
+                               data-target="#datetimepicker1"/>
+                        <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="form-group">
+                        <button type="submit" value="Submit" class="btn btn-primary" data-toggle="modal"
+                                data-target="#exampleModal">Predict
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+      {% load static %}
+      <script src="{% static 'js/script.js' %}"></script>
+{% endblock %}
+

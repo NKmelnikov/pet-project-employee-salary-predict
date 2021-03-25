@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres
+    hostname: postgres
+    ports:
+      - "6542:5432"
+    networks:
+      nknet:
+        ipv4_address: 172.19.0.3
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: test_db
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    networks:
+      nknet:
+        ipv4_address: 172.19.0.2
+    depends_on:
+      - db
+
+volumes:
+  postgres-data:
+
+networks:
+  nknet:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: 172.19.0.0/16
+         gateway: 172.19.0.1

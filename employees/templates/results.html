@@ -1,0 +1,39 @@
+{% extends "index.html" %}
+
+{% block main %}
+    <div class="container pt-5">
+        <div class="row">
+            {% if dataset %}
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Annual RT</th>
+                        <th scope="col">Gross</th>
+                        <th scope="col">Department</th>
+                        <th scope="col">Hire date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for employee in dataset %}
+                        <tr>
+                            <th scope="row">{{ employee.id }}</th>
+                            <td>{{ employee.name }}</td>
+                            <td>{{ employee.annual_rt }}</td>
+                            <td>{{ employee.gross }}</td>
+                            <td>{{ employee.department }}</td>
+                            <td>{{ employee.hire_date }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div>
+                    <p>Here you`ll see employees with predicted salary</p>
+                    <p>Once you add them</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
