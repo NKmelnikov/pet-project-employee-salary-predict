@@ -1,11 +1,11 @@
 from django.db import DatabaseError
 from django.shortcuts import render
-from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest, HttpResponseNotFound, \
+from django.http import JsonResponse, HttpResponse, HttpResponseNotFound, \
     HttpResponseServerError
 import pandas as pd
 import pickle
+import os
 from datetime import datetime
-from pprint import pprint
 
 from .models import Employees, Department, JobTitle
 
@@ -22,6 +22,15 @@ def index(request):
 def results(request):
     data = {"dataset": Employees.objects.order_by('-id')}
     return render(request, "results.html", data)
+
+
+def get_jobtitles_by_dep_id(request, dep_id):
+    try:
+        dep = Department.objects.get(pk=dep_id)
+    except Department.DoesNotExist:
+        return HttpResponse('Exception: Department Not Found')
+    else:
+        return JsonResponse(list(dep.jobtitle_set.all().values()), safe=False)
 
 
 def predict_salary(request):
@@ -47,7 +56,8 @@ def predict_salary(request):
             index=[0]
         )
 
-        prediction = get_prediction(final_data)
+        model_file = '/code/salary-predict.pickle'
+        prediction = get_prediction(final_data, model_file)
 
         Employees.objects.create(
             name=name,
@@ -69,29 +79,21 @@ def convert_hire_date_to_work_exp(date):
     work_exp = convert_point - datetime.strptime(date, '%Y-%m-%d')
     return float(str(work_exp).split()[0])
 
-
-def get_department_id_by_uid(uid):
-    return Department.objects.get(uid=uid)
-
-
 def convert_le(entity, path):
+    if not os.path.exists(path):
+        raise FileNotFoundError('File for label encoding conversion not found, please perform salary-predict.ipynb first')
+
     le = pickle.load(open(path, "rb"))
     return list(le.transform([entity]))
 
 
-def get_prediction(final_data):
-    model = pickle.load(open("salary-predict.pickle", "rb"))
+def get_prediction(final_data, model_file_path):
+    if not os.path.exists(model_file_path):
+        raise FileNotFoundError('Model file not found, please perform salary-predict.ipynb first')
+
+    model = pickle.load(open(model_file_path, "rb"))
     result = model.predict(final_data)
     return round(float(result[0]), 2)
-
-
-def get_jobtitles_by_dep_id(request, dep_id):
-    try:
-        dep = Department.objects.get(pk=dep_id)
-    except Department.DoesNotExist:
-        return HttpResponse('Exception: Department Not Found')
-    else:
-        return JsonResponse(list(dep.jobtitle_set.all().values()), safe=False)
 
 
 def perform_migration(request):
@@ -108,7 +110,7 @@ def perform_migration(request):
 
 def migrate_departments(data):
     uid = data['DEPTID'].str[:3]
-    name = data['DESCR'].str.replace('(\s+[( ]$|\s+\(\d{3}\)$|\s+\(\d{1}$)', '')
+    name = data['DESCR'].str.replace('(\s+[( ]$|\s+\(\d{3}\)$|\s+\(\d{1}$)', '', regex=True)
 
     df = pd.DataFrame(data={'uid': uid, 'name': name})
     df = df.drop_duplicates(subset=['uid']).sort_values(by=['name'])

@@ -1,7 +1,4 @@
-import datetime
-
 from django.db import models
-from django.utils import timezone
 
 
 class Department(models.Model):
@@ -10,10 +7,6 @@ class Department(models.Model):
 
     def __str__(self):
         return self.name
-
-
-def get_by_department_id(id):
-    return JobTitle.objects.all(department=id)
 
 
 class JobTitle(models.Model):

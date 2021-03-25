@@ -6,15 +6,17 @@ import os
 import pandas as pd
 from ..views import migrate_departments, migrate_jobtitles
 
-from ..models import Employees, Department, JobTitle
+from ..models import Department, JobTitle
 
 
 class MigrateTestCase(TestCase):
     file_path = '/code/baltimore-city-employee-salaries-fy2019.csv'
 
+
     def test_migrate(self):
         """
-        If migration goes well, there should be some rows in db
+        If migration goes well,
+        db should be filled up with data from csv file
         """
         response = self.client.get(reverse('employees:perform_migration'))
 
@@ -23,14 +25,15 @@ class MigrateTestCase(TestCase):
         assert Department.objects.count() == 56
         assert JobTitle.objects.count() == 1010
 
-        assert Department.objects.filter(id=1, uid='A24', name='COMP-Audits').exists()
-        assert Department.objects.filter(id=56, uid='A90', name='TRANS-Traffic').exists()
+        assert Department.objects.filter(name='COMP-Audits').exists()
+        assert Department.objects.filter(name='TRANS-Traffic').exists()
 
-        assert JobTitle.objects.filter(id=1, name='911 Lead Operator', department_id=23).exists()
-        assert JobTitle.objects.filter(id=1010, name='Zoning Examiner I', department_id=28).exists()
+        assert JobTitle.objects.filter(name='911 Lead Operator').exists()
+        assert JobTitle.objects.filter(name='Zoning Examiner I').exists()
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'success')
+
 
     def test_migrate_departments(self):
         """
@@ -44,9 +47,9 @@ class MigrateTestCase(TestCase):
         response = migrate_departments(data)
         self.assertEqual(response, 'success')
 
-    def test_migrate_jobtitles_positive(self):
+    def test_migrate_jobtitles(self):
         """
-        If migration process goes well
+        Test for migrate_jobtitles function
         """
         data = pd.read_csv(self.file_path)
         assert 'DEPTID' in data.columns
@@ -57,9 +60,9 @@ class MigrateTestCase(TestCase):
         response = migrate_jobtitles(data)
         self.assertEqual(response, 'success')
 
-    def test_migrate_jobtitles_negative(self):
+    def test_migrate_jobtitles_no_departments(self):
         """
-        If migrate_departments has not been performed for some reason and
+        If migrate_departments has not been performed for some reason
         """
         data = pd.read_csv(self.file_path)
 
