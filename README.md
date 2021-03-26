@@ -16,7 +16,7 @@ https://data.world/baltimore/6xv6-e66h/workspace/file?filename=baltimore-city-em
 2. Выполнить ноутбук salary-predict.ipynb
 3. Развернуть Django проект
 *  `docker-compose up`
-4. Создать таблицы в базе данных _(Следующие команды прописываются внутри контейнера)_
+4. Создать таблицы в базе данных _(Последующие команды прописываются внутри контейнера)_
 *  `python manage.py sqlmigrate employees 0001`
 *  `python manage.py migrate`
 5. Далее на главной странице http://0.0.0.0:8000 вам будет предложено мигрировать необходимые данные из .csv в таблицы базы данных
@@ -42,7 +42,7 @@ To proceed to acquaintance, you need:
 2. Run the notebook salary-predict.ipynb
 3. Deploy the Django project 
   * `docker-compose up`
-4. Create tables in the database _(The following commands should be executed inside the container)_
+4. Create tables in the database _(The next commands should be executed inside the container)_
   * `python manage.py sqlmigrate employees 0001`
   * `python manage.py migrate`
 5. Further on the main page http://0.0.0.0:8000 you will be prompted to migrate the necessary data from .csv to the database tables
