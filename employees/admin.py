@@ -9,7 +9,7 @@ class JobTitleAdmin(admin.ModelAdmin):
     ]
     list_display = ('name', 'department')
     search_fields = ['name']
-    list_filter = ['name']
+    list_filter = ['department']
 
 
 class DepartmentAdmin(admin.ModelAdmin):
@@ -18,7 +18,6 @@ class DepartmentAdmin(admin.ModelAdmin):
     ]
     list_display = ('uid', 'name')
     search_fields = ['uid', 'name']
-    list_filter = ['name']
 
 
 class EmployeesAdmin(admin.ModelAdmin):

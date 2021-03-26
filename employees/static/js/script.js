@@ -10,11 +10,12 @@ $(document).ready(function () {
         post_form: $('#post-form'),
         btn_migrate: $('#btn_migrate'),
         option: $("<option></option>"),
+        modal_prediction: $('#exampleModal'),
 
         clear_jobtitle_options() {
             a.select_jobtitle.empty();
             a.select_jobtitle.append($("<option></option>")
-                .attr("value", null).text('---------'));
+                .attr("value", "").text('--------------'));
         },
 
         get_jobtitle_options(_this) {
@@ -28,8 +29,22 @@ $(document).ready(function () {
             })
         },
 
-        get_prediction(e) {
-            e.preventDefault();
+        validate_inputs() {
+            const condition =
+                a.name.val().length === 0 ||
+                a.annual_rt.val().length === 0 ||
+                $('#id_department option:selected').text() === '--------------' ||
+                $('#id_jobtitle option:selected').text() === '--------------'
+
+            if (condition) {
+                alert('Please select department and job title')
+                return false;
+            }
+
+            return true;
+        },
+
+        makePrediction() {
             $.ajax({
                 type: 'POST',
                 url: '/predict/',
@@ -43,7 +58,6 @@ $(document).ready(function () {
                     action: 'post'
                 },
                 success: function (json) {
-                    document.forms["post-form"].reset();
                     document.getElementById("prediction").innerHTML = json['result']
                     document.getElementById("we").innerHTML = json['work_exp']
                     document.getElementById("di").innerHTML = json['department']
@@ -52,6 +66,14 @@ $(document).ready(function () {
 
                 }
             });
+        },
+
+        get_prediction(e) {
+            e.preventDefault();
+            if (a.validate_inputs()) {
+                a.modal_prediction.modal('show');
+                a.makePrediction()
+            }
         },
 
         perform_migration() {
@@ -89,7 +111,13 @@ $(document).ready(function () {
     });
 
     if (a.datepicker.parents('html').length > 0) {
-        a.datepicker.datetimepicker({format: 'YYYY-MM-DD'});
+        a.datepicker.datetimepicker({
+            format: 'YYYY-MM-DD',
+            useCurrent: false,
+            defaultDate: new Date('1961-04-12'),
+            minDate: new Date('1961-04-12'),
+            maxDate: new Date('2020-01-01'),
+        });
     }
 })
 

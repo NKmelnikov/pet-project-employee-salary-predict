@@ -64,6 +64,7 @@ def predict_salary(request):
             annual_rt=annual_rt,
             hire_date=hire_date,
             department_id=Department.objects.get(name=department).id,
+            jobtitle_id=JobTitle.objects.get(name=jobtitle).id,
             gross=prediction
         )
 
