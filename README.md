@@ -10,6 +10,7 @@ https://data.world/baltimore/6xv6-e66h/workspace/file?filename=baltimore-city-em
 Данные представлены за 2019 год.
 
 Чтобы преступить к ознакомлению необходимо:
+
 0. Стянуть проект
 1. Ознакомиться с исследованием в файле salary-predict-research.ipynb (любые комментарии приветствуются)
 2. Выполнить ноутбук salary-predict.ipynb
@@ -35,6 +36,7 @@ Purpose of this project: to predict the salary of employees in the city of Balti
 Data are presented for 2019.
 
 To proceed to acquaintance, you need:
+
 0. Pull the project
 1. Read my research in the salary-predict-research.ipynb file (you are more than welcome to leave any comments)
 2. Run the notebook salary-predict.ipynb
