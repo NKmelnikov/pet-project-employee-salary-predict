@@ -14,16 +14,16 @@ https://data.world/baltimore/6xv6-e66h/workspace/file?filename=baltimore-city-em
 1. Ознакомиться с исследованием в файле salary-predict-research.ipynb (любые комментарии приветствуются)
 2. Выполнить ноутбук salary-predict.ipynb
 3. Развернуть Django проект
-*  docker-compose up
+*  `docker-compose up`
 4. Создать таблицы в базе данных
-*  python manage.py sqlmigrate employees 0001
-*  python manage.py migrate
+*  `python manage.py sqlmigrate employees 0001`
+*  `python manage.py migrate`
 5. Далее на главной странице http://0.0.0.0:8000 вам будет предложено мигрировать необходимые данные из .csv в таблицы базы данных
 6. После чего можно будет выполнить предсказание.
 7. При желании, можно создать администратора и просмотреть данные, которые используются в приложении
-*  python manage.py createsuperuser
+*  `python manage.py createsuperuser`
 8. Так же, при желании можете прогнать юнит-тесты
-*  python manage.py test employees
+*  `python manage.py test employees`
 
 
 EN
